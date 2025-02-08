@@ -389,20 +389,17 @@ def float_to_int(x: float, power: int) -> int:
     res: int = round(with_decimals)
     return res
 
-
 def get_timestamp_ms() -> int:
-    # 获取纳秒级时间戳并转换为毫秒
-    ns_time = time.perf_counter_ns()
-    ms_time = ns_time // 1_000_000
+    # 获取当前时间的毫秒时间戳
+    current_ms = int(time.time() * 1000)
     
-    # 生成0-9的随机数作为最后一位
-    random_suffix = random.randint(0, 9)
+    # 生成000-999的随机数作为最后三位
+    random_suffix = random.randint(0, 999)
     
-    # 获取时间戳前缀（去掉最后一位）
-    timestamp_prefix = (int(ms_time) // 10) * 10
-    
-    # 组合时间戳前缀和随机后缀
-    return timestamp_prefix + random_suffix
+    # 替换最后三位为随机数，保持时间戳基本准确性
+    timestamp = (current_ms // 1000) * 1000 + random_suffix
+
+    return timestamp
 
 def order_request_to_order_wire(order: OrderRequest, asset: int) -> OrderWire:
     order_wire: OrderWire = {
