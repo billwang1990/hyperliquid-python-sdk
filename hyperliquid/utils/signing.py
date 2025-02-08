@@ -388,10 +388,36 @@ def float_to_int(x: float, power: int) -> int:
     res: int = round(with_decimals)
     return res
 
+import threading
+import time
+
+class TimestampGenerator:
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._last_timestamp = 0
+        self._counter = 0
+    
+    def get_timestamp(self, current_timestamp: int):
+        with self._lock:            
+            # 如果是同一毫秒
+            if current_timestamp == self._last_timestamp:
+                self._counter += 1
+            else:  # 新的毫秒，重置计数器
+                self._last_timestamp = current_timestamp
+                self._counter = 0
+                
+            # 获取时间戳的前12位
+            prefix = current_timestamp // 10 * 10
+            # 使用计数器作为最后一位（确保在0-9范围内）
+            suffix = self._counter % 10
+            
+            return prefix + suffix
+        
+_timestamp_generator = TimestampGenerator()
+
 
 def get_timestamp_ms() -> int:
-    return int(time.time() * 1000)
-
+    return _timestamp_generator.get_timestamp(int(time.time() * 1000))
 
 def order_request_to_order_wire(order: OrderRequest, asset: int) -> OrderWire:
     order_wire: OrderWire = {
