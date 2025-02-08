@@ -2,8 +2,6 @@ import json
 import logging
 import secrets
 
-import random
-
 import eth_account
 from eth_account.signers.local import LocalAccount
 
@@ -113,12 +111,6 @@ class Exchange(API):
             order_request_to_order_wire(order, self.info.name_to_asset(order["coin"])) for order in order_requests
         ]
         timestamp = get_timestamp_ms()
-
-        # 获取时间戳的前12位
-        prefix = timestamp // 10 * 10
-        # 生成0-9的随机数作为最后一位
-        random_digit = random.randint(0, 9)
-        timestamp = prefix + random_digit
 
         if builder:
             builder["b"] = builder["b"].lower()
