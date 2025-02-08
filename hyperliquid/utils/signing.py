@@ -404,9 +404,6 @@ def get_timestamp_ms() -> int:
     # 组合时间戳前缀和随机后缀
     return timestamp_prefix + random_suffix
 
-def get_timestamp_ms() -> int:
-    return _timestamp_generator.get_timestamp(int(time.time() * 1000))
-
 def order_request_to_order_wire(order: OrderRequest, asset: int) -> OrderWire:
     order_wire: OrderWire = {
         "a": asset,
