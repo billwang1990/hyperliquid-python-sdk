@@ -112,6 +112,12 @@ class Exchange(API):
         ]
         timestamp = get_timestamp_ms()
 
+        # 获取时间戳的前12位
+        prefix = timestamp // 10 * 10
+        # 生成0-9的随机数作为最后一位
+        random_digit = random.randint(0, 9)
+        timestamp = prefix + random_digit
+
         if builder:
             builder["b"] = builder["b"].lower()
         order_action = order_wires_to_order_action(order_wires, builder)
